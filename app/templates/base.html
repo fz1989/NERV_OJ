@@ -1,0 +1,12 @@
+<html>
+    <head>
+        {% include "header.html"%}
+    </head>
+    <body>
+        <div id="wrap">
+            {% include "nav.html" %}
+            {% block content %} {% end %} 
+        </div>
+        {% include "footer.html" %}
+    </body>
+</html>
