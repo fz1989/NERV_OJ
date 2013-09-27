@@ -1,11 +1,11 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, Text, Boolean
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
+from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 class User(Base):
-    __table__ = 'users'
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key = True)
     username = Column(String(10))
