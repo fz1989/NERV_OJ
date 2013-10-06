@@ -3,8 +3,8 @@
         {% include "header.html"%}
     </head>
     <body>
-        <div id="wrap">
-            {% include "nav.html" %}
+        {% include "nav.html" %}
+        <div id="wrap", class = box>
             {% block content %} {% end %} 
         </div>
         {% include "footer.html" %}
