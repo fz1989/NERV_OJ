@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
 import six
-from DateTime import DateTime
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import ForeignKey, DateTime, Boolean, Text, Float
@@ -71,8 +71,8 @@ class ModelBase(object):
 
 
 class TimestampMixin(object):
-    created_at = Column(DateTime, default=DateTime.now())
-    updated_at = Column(DateTime, onupdate=DateTime.now())
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, onupdate=datetime.now())
 
 
 class SoftDeleteMixin(object):
@@ -82,7 +82,7 @@ class SoftDeleteMixin(object):
     def soft_delete(self, session=None):
         """Mark this object as deleted."""
         self.deleted = self.id
-        self.deleted_at = DateTime.now()
+        self.deleted_at = datetime.now()
         self.save(session=session)
 
 class OJBase(SoftDeleteMixin,
@@ -107,7 +107,7 @@ class User(Base, OJBase):
     group_id = Column(Text)
 
 class Contest(Base, OJBase):
-    __table__ = 'contests'
+    __tablename__ = 'contests'
 
     id = Column(Integer, primary_key = True)
     title = Column(Text)
@@ -118,7 +118,7 @@ class Contest(Base, OJBase):
     enabled =  Column(Boolean)
 
 class Problem(Base, OJBase):
-    __table__ = 'problems'
+    __tablename__ = 'problems'
 
     id = Column(Integer, primary_key = True)
     title = Column(Text)
@@ -137,7 +137,7 @@ class Problem(Base, OJBase):
     enabled = Column(Boolean)
 
 class Source(Base, OJBase):
-    __table__ = 'sources'
+    __tablename__ = 'sources'
 
     id = Column(Integer, primary_key = True)
     username = Column(String(20))
@@ -150,4 +150,4 @@ class Source(Base, OJBase):
     judge_time = Column(DateTime)
     memory_usage = Column(Integer)
     time_usage = Column(Integer)
-    result = Column(String)
+    result = Column(String(20))
