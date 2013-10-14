@@ -10,9 +10,12 @@ import sys
 
 class DBAPI:
     def sync_db(self):
-        DATA_BASE_ENGIN = ("%s://%s:%s@%s/%s") % (DATA_BASE_BACKEND, DATA_BASE_USER,
-                DATA_BASE_PASSWORD, DATA_BASE_IP, DATA_BASE_NAME)
-        engine = create_engine(DATA_BASE_ENGIN)
+        
+        create_sql = ("CREATE DATABASE IF NOT EXISTS %s") % (DATA_BASE_NAME)
+        engine = create_engine(DATA_BASE_CONNECTION)
+        engine.execute(create_sql)
+        engine.dispose()
+        engine = create_engine(DATA_BASE_URI)
         Base.metadata.create_all(engine)
 
 dbAPI = DBAPI()

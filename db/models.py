@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import ForeignKey, DateTime, Boolean, Text, Float
 from sqlalchemy.orm import relationship, backref, object_mapper
-from session import Session
+import session as Session
 Base = declarative_base()
 # this copy from https://github.com/openstack/nova/blob/master/nova/openstack/common/db/sqlalchemy/models.py
 
