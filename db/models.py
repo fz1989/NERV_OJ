@@ -28,8 +28,11 @@ class ModelBase(object):
         #                 explicity.
         #with session.begin(subtransactions=True):
         session.add(self)
-            #session.flush()
-        session.commit()
+        try:
+            session.flush()
+            session.commit()
+        except:
+            session.rollback()
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
