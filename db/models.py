@@ -26,9 +26,10 @@ class ModelBase(object):
         #                 transaction and rollback is called. As long as
         #                 sqlalchemy has this bug we have to create transaction
         #                 explicity.
-        with session.begin(subtransactions=True):
-            session.add(self)
-            session.flush()
+        #with session.begin(subtransactions=True):
+        session.add(self)
+            #session.flush()
+        session.commit()
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
@@ -94,7 +95,7 @@ class User(Base, OJBase):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key = True)
-    username = Column(String(10), unique = True, nullable = False)
+    username = Column(String(20), unique = True, nullable = False)
     password = Column(String(128), nullable = False)
     email = Column(String(100), unique = True, nullable = False)
     school = Column(String(100))
@@ -140,7 +141,6 @@ class Source(Base, OJBase):
     __tablename__ = 'sources'
 
     id = Column(Integer, primary_key = True)
-    username = Column(String(20))
     source_code = Column(Text)
     length = Column(Integer)
     submit_time =  Column(DateTime)

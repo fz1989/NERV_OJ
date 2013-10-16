@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
+import sys
+sys.path.insert(0, '../')
 import six
 from sqlalchemy import *
 import sqlalchemy.orm
@@ -35,7 +37,7 @@ def get_engine():
     global _ENGINE
     engine = _ENGINE
     if engine is None:
-       engine = create_engine(DATA_BASE_URI)
+       engine = create_engine(DATA_BASE_URI, echo = True)
     _ENGINE = engine
     return engine
 
