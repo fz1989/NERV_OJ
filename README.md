@@ -12,4 +12,4 @@ Let's Start!
 ##python package reqiurment
 1. tornado
 2. MySQL-python
-3. 3. SQLAlchemy
+3. SQLAlchemy
