@@ -29,3 +29,6 @@ class DBAPI:
 
 dbAPI = DBAPI()
 dbAPI.sync_db()
+
+def registuser(username, userpassword, user_group):
+
