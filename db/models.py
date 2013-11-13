@@ -95,7 +95,7 @@ class OJBase(SoftDeleteMixin,
     metadata = None
 
 class User(Base, OJBase):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id = Column(Integer, primary_key = True)
     username = Column(String(20), unique = True, nullable = False)
@@ -109,9 +109,10 @@ class User(Base, OJBase):
     solved = Column(Integer)
     share_code = Column(Boolean)
     group_id = Column(Text)
+    source_code = relationship("Source", backref = "user")
 
 class Contest(Base, OJBase):
-    __tablename__ = 'contests'
+    __tablename__ = 'contest'
 
     id = Column(Integer, primary_key = True)
     title = Column(Text)
@@ -120,9 +121,10 @@ class Contest(Base, OJBase):
     start_time =  Column(DateTime)
     end_time =  Column(DateTime)
     enabled =  Column(Boolean)
+    contest_problem = relationship("Contest_Problem", backref = "contest")
 
 class Problem(Base, OJBase):
-    __tablename__ = 'problems'
+    __tablename__ = 'problem'
 
     id = Column(Integer, primary_key = True)
     title = Column(Text)
@@ -139,9 +141,11 @@ class Problem(Base, OJBase):
     accepted = Column(Integer)
     submitted = Column(Integer)
     enabled = Column(Boolean)
+    source_code = relationship("Source", backref = "problem")
+    contest_problem = relationship("Contest_Problem", backref = "problem")
 
 class Source(Base, OJBase):
-    __tablename__ = 'sources'
+    __tablename__ = 'source'
 
     id = Column(Integer, primary_key = True)
     source_code = Column(Text)
@@ -154,3 +158,21 @@ class Source(Base, OJBase):
     memory_usage = Column(Integer)
     time_usage = Column(Integer)
     result = Column(String(20))
+    contest_id = Column(Integer)
+
+    user_id = Column(Integer, ForeignKey("user.id"))
+    problem_id = Column(Integer, ForeignKey("problem.id"))
+
+class Contest_Problem(Base, OJBase):
+    __tablename__ = "contest_problem"
+
+    title = Column(Text)
+    num = Column(Integer)
+    id = Column(Integer, primary_key = True)
+    contest_id = Column(Integer, ForeignKey("contest.id"))
+    problem_id = Column(Integer, ForeignKey("problem.id"))
+
+
+
+
+

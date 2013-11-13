@@ -2,10 +2,11 @@
 #coding=utf-8
 import sys
 sys.path.insert(0, '../')
-from models import Base
+from models import *
 from sqlalchemy import *
 from config.config import *
 import sys
+
 
 class DBAPI:
     def sync_db(self):
@@ -27,8 +28,18 @@ class DBAPI:
         engine.execute(drop_sql)
         engine.dispose()
 
-dbAPI = DBAPI()
-dbAPI.sync_db()
+    def regist_user(self, username, userpassword, email):
+        user = User(username = username,
+                    userpassword = userpassword,
+                    email = email,
+                    )
+        try:
+            user.save()
+        except:
+            pass
 
-def registuser(username, userpassword, user_group):
+DI = DBAPI()
+
+def regist_user(username, userpassword, email):
+    DI.regist_user(username, userpassword, email)
 
