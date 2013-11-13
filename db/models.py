@@ -8,12 +8,18 @@ from sqlalchemy import ForeignKey, DateTime, Boolean, Text, Float
 from sqlalchemy.orm import relationship, backref, object_mapper
 import session as Session
 Base = declarative_base()
+from sqlalchemy import DDL
+from sqlalchemy import event
 # this copy from https://github.com/openstack/nova/blob/master/nova/openstack/common/db/sqlalchemy/models.py
 
 class ModelBase(object):
     """Base class for models."""
     __table_initialized__ = False
 
+    __table_args__ = {
+            'mysql_engine': 'InnoDB',
+            'mysql_charset': 'utf8'
+    }
     def save(self, session=None):
         """Save this object."""
         if not session:
@@ -100,7 +106,7 @@ class User(Base, OJBase):
     id = Column(Integer, primary_key = True)
     username = Column(String(20), unique = True, nullable = False)
     password = Column(String(128), nullable = False)
-    email = Column(String(100), unique = True, nullable = False)
+    email = Column(String(100))
     school = Column(String(100))
     reg_time = Column(DateTime)
     last_sign_in = Column(DateTime)
@@ -125,6 +131,9 @@ class Contest(Base, OJBase):
 
 class Problem(Base, OJBase):
     __tablename__ = 'problem'
+    __table_args__ = {
+            "AUTO_INCREMENT":1001
+    }
 
     id = Column(Integer, primary_key = True)
     title = Column(Text)
@@ -171,6 +180,12 @@ class Contest_Problem(Base, OJBase):
     id = Column(Integer, primary_key = True)
     contest_id = Column(Integer, ForeignKey("contest.id"))
     problem_id = Column(Integer, ForeignKey("problem.id"))
+
+event.listen(
+            Problem.__table__,
+            "after_create",
+            DDL("ALTER TABLE %(table)s AUTO_INCREMENT = 1001;")
+)
 
 
 
