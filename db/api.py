@@ -20,7 +20,7 @@ class DBAPI:
             engine = create_engine(DATA_BASE_CONNECTION, echo=True)
             engine.execute(create_sql)
             engine.dispose()
-            engine = create_engine(DATA_BASE_URI, echo=rue)
+            engine = create_engine(DATA_BASE_URI, echo=True)
             Base.metadata.create_all(engine)
 
     def clean_up(self):
