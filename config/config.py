@@ -18,3 +18,4 @@ DATA_BASE_CONNECTION = ("%s://%s:%s@%s") % (DATA_BASE_BACKEND,
                                             DATA_BASE_USER,
                                             DATA_BASE_PASSWORD, DATA_BASE_IP)
 DATA_BASE_URI = ("%s/%s") % (DATA_BASE_CONNECTION, DATA_BASE_NAME)
+DEBUG = config.get("mode", "DEBUG")

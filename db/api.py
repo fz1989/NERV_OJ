@@ -17,10 +17,10 @@ class DBAPI:
         except:
             create_sql = ("CREATE DATABASE IF NOT EXISTS %s") %\
                          (DATA_BASE_NAME)
-            engine = create_engine(DATA_BASE_CONNECTION, echo=True)
+            engine = create_engine(DATA_BASE_CONNECTION)
             engine.execute(create_sql)
             engine.dispose()
-            engine = create_engine(DATA_BASE_URI, echo=True)
+            engine = create_engine(DATA_BASE_URI)
             Base.metadata.create_all(engine)
 
     def clean_up(self):

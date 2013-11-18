@@ -109,6 +109,7 @@ class Contest_Problem(Base, OJBase):
                                    ondelete='CASCADE',
                                    onupdate='CASCADE'))
 
+
 event.listen(Problem.__table__,
              "after_create",
              DDL("ALTER TABLE %(table)s AUTO_INCREMENT = 1001;"))
