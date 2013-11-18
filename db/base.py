@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import ForeignKey, DateTime, Boolean, Text, Float
 from sqlalchemy.orm import relationship, backref, object_mapper
+from sqlalchemy import func, or_, not_
 import session as Session
 
 
@@ -74,6 +75,100 @@ class ModelBase(object):
                       if not k[0] == '_'])
         local.update(joined)
         return local.iteritems()
+
+    @classmethod
+    def get_by_id(cls, id, session=None, columns=None, lock_mode=None):
+        if not session:
+            session = Session.get_session()
+        if hasattr(cls, 'id'):
+            scalar = False
+            if columns:
+                if isinstance(columns, (tuple, list)):
+                    query = session.query(*columns)
+                else:
+                    scalar = True
+                    query = session.query(columns)
+            else:
+                query = session.query(cls)
+            if lock_mode:
+                query = query.with_lockmode(lock_mode)
+            query = query.filter(cls.id == id)
+            if scalar:
+                return query.scalar()
+            return query.first()
+        return None
+
+    @classmethod
+    def get_all(cls,
+                session=None,
+                columns=None,
+                offset=None,
+                limit=None,
+                order_by=None,
+                lock_mode=None):
+        if not session:
+            session = Session.get_session()
+        if columns:
+            if isinstance(columns, (tuple, list)):
+                query = session.query(*columns)
+            else:
+                query = session.query(columns)
+                if isinstance(columns, str):
+                    query = query.select_from(cls)
+        else:
+            query = session.query(cls)
+        if order_by is not None:
+            if isinstance(order_by, (tuple, list)):
+                query = query.order_by(*order_by)
+            else:
+                query = query.order_by(order_by)
+        if offset:
+            query = query.offset(offset)
+        if limit:
+            query = query.limit(limit)
+        if lock_mode:
+            query = query.with_lockmode(lock_mode)
+        return query.all()
+
+    @classmethod
+    def count_all(cls, session=None, lock_mode=None):
+        if not session:
+            session = Session.get_session()
+        query = session.query(func.count('*')).select_from(cls)
+        if lock_mode:
+            query = query.with_lockmode(lock_mode)
+        return query.scalar()
+
+    @classmethod
+    def exist(cls, id, session=None, lock_mode=None):
+        if not session:
+            session = Session.get_session()
+
+        if hasattr(cls, 'id'):
+            query = session.query(func.count('*')).select_from(cls).filter(cls.id == id)
+            if lock_mode:
+                query = query.with_lockmode(lock_mode)
+            return query.scalar() > 0
+        return False
+
+    @classmethod
+    def set_attr(cls, id, attr, value, session=None):
+        if not session:
+            session = Session.get_session()
+
+        if hasattr(cls, 'id'):
+            session.query(cls).filter(cls.id == id).update({
+                attr: value
+            })
+            session.commit()
+
+    @classmethod
+    def set_attrs(cls, id, attrs, session=None):
+        if not session:
+            session = Session.get_session()
+        if hasattr(cls, 'id'):
+            session.query(cls).filter(cls.id == id).update(attrs)
+            session.commit()
 
 
 class TimestampMixin(object):

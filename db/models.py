@@ -11,7 +11,8 @@ Base = declarative_base()
 from sqlalchemy import DDL
 from sqlalchemy import event
 from base import OJBase
-# this copy from https://github.com/openstack/nova/blob/master/nova/openstack/common/db/sqlalchemy/models.py
+# this copy from https://github.com/openstack/nova/
+# and the classmethod copy from http://www.keakon.net/
 
 
 class User(Base, OJBase):
