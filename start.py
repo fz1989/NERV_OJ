@@ -10,7 +10,7 @@ import tornado.httpserver
 
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("base.html")
+        self.render("home.html")
 
 
 class Application(tornado.web.Application):
