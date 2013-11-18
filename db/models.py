@@ -32,6 +32,9 @@ class User(Base, OJBase):
     group_id = Column(Text)
     source_code = relationship("Source", backref="user")
 
+    def __repr__(self):
+        return "User(id=%d, username=%s)" % (self.id, self.username)
+
 
 class Contest(Base, OJBase):
     __tablename__ = 'contest'
@@ -44,6 +47,9 @@ class Contest(Base, OJBase):
     end_time = Column(DateTime)
     enabled = Column(Boolean)
     contest_problem = relationship("Contest_Problem", backref="contest")
+
+    def __repr__(self):
+        print "Contest(id=%d, title=%s)" % (self.id, self.title)
 
 
 class Problem(Base, OJBase):
@@ -66,6 +72,9 @@ class Problem(Base, OJBase):
     enabled = Column(Boolean)
     source_code = relationship("Source", backref="problem")
     contest_problem = relationship("Contest_Problem", backref="problem")
+
+    def __repr__(self):
+        print "Problem(id=%d, title=%s)" % (self.id, self.title)
 
 
 class Source(Base, OJBase):
@@ -93,6 +102,9 @@ class Source(Base, OJBase):
                                    ondelete='CASCADE',
                                    onupdate='CASCADE'))
 
+    def __repr__(self):
+        print "Source(id=%d, title=%s)" % (self.id, self.title)
+
 
 class Contest_Problem(Base, OJBase):
     __tablename__ = "contest_problem"
@@ -108,6 +120,9 @@ class Contest_Problem(Base, OJBase):
                         ForeignKey("problem.id",
                                    ondelete='CASCADE',
                                    onupdate='CASCADE'))
+
+    def __repr__(self):
+        print "Contest_Problem(id=%d, title=%s)" % (self.id, self.title)
 
 
 event.listen(Problem.__table__,

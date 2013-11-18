@@ -22,6 +22,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "init":
         init()
     print User.get_all()
-    print User.get_by_id(id=1, columns="email")
     for user in User.get_all():
         print user
