@@ -12,14 +12,14 @@ from sqlalchemy import DDL
 from sqlalchemy import event
 # this copy from https://github.com/openstack/nova/blob/master/nova/openstack/common/db/sqlalchemy/models.py
 
+
 class ModelBase(object):
     """Base class for models."""
     __table_initialized__ = False
 
-    __table_args__ = {
-            'mysql_engine': 'InnoDB',
-            'mysql_charset': 'utf8'
-    }
+    __table_args__ = {'mysql_engine': 'InnoDB',
+                      'mysql_charset': 'utf8'}
+
     def save(self, session=None):
         """Save this object."""
         if not session:
@@ -95,18 +95,20 @@ class SoftDeleteMixin(object):
         self.deleted_at = datetime.now()
         self.save(session=session)
 
+
 class OJBase(SoftDeleteMixin,
-               TimestampMixin,
-               ModelBase):
+             TimestampMixin,
+             ModelBase):
     metadata = None
+
 
 class User(Base, OJBase):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key = True)
-    username = Column(String(20), unique = True, nullable = False)
-    password = Column(String(128), nullable = False)
-    email = Column(String(100))
+    id = Column(Integer, primary_key=True)
+    username = Column(String(20), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
     school = Column(String(100))
     reg_time = Column(DateTime)
     last_sign_in = Column(DateTime)
@@ -115,27 +117,26 @@ class User(Base, OJBase):
     solved = Column(Integer)
     share_code = Column(Boolean)
     group_id = Column(Text)
-    source_code = relationship("Source", backref = "user")
+    source_code = relationship("Source", backref="user")
+
 
 class Contest(Base, OJBase):
     __tablename__ = 'contest'
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     title = Column(Text)
-    description =  Column(Text)
-    private =  Column(Integer)
-    start_time =  Column(DateTime)
-    end_time =  Column(DateTime)
-    enabled =  Column(Boolean)
-    contest_problem = relationship("Contest_Problem", backref = "contest")
+    description = Column(Text)
+    private = Column(Integer)
+    start_time = Column(DateTime)
+    end_time = Column(DateTime)
+    enabled = Column(Boolean)
+    contest_problem = relationship("Contest_Problem", backref="contest")
+
 
 class Problem(Base, OJBase):
     __tablename__ = 'problem'
-    __table_args__ = {
-            "AUTO_INCREMENT":1001
-    }
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     title = Column(Text)
     description = Column(Text)
     input = Column(Text)
@@ -146,20 +147,21 @@ class Problem(Base, OJBase):
     source = Column(Text)
     time_limit = Column(Integer)
     memory_limit = Column(Integer)
-    spj =  Column(Boolean)
+    spj = Column(Boolean)
     accepted = Column(Integer)
     submitted = Column(Integer)
     enabled = Column(Boolean)
-    source_code = relationship("Source", backref = "problem")
-    contest_problem = relationship("Contest_Problem", backref = "problem")
+    source_code = relationship("Source", backref="problem")
+    contest_problem = relationship("Contest_Problem", backref="problem")
+
 
 class Source(Base, OJBase):
     __tablename__ = 'source'
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     source_code = Column(Text)
     length = Column(Integer)
-    submit_time =  Column(DateTime)
+    submit_time = Column(DateTime)
     submit_ip = Column(String(20))
     lang = Column(Integer)
     share = Column(Boolean)
@@ -172,22 +174,16 @@ class Source(Base, OJBase):
     user_id = Column(Integer, ForeignKey("user.id"))
     problem_id = Column(Integer, ForeignKey("problem.id"))
 
+
 class Contest_Problem(Base, OJBase):
     __tablename__ = "contest_problem"
 
     title = Column(Text)
     num = Column(Integer)
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     contest_id = Column(Integer, ForeignKey("contest.id"))
     problem_id = Column(Integer, ForeignKey("problem.id"))
 
-event.listen(
-            Problem.__table__,
-            "after_create",
-            DDL("ALTER TABLE %(table)s AUTO_INCREMENT = 1001;")
-)
-
-
-
-
-
+event.listen(Problem.__table__,
+             "after_create",
+             DDL("ALTER TABLE %(table)s AUTO_INCREMENT = 1001;"))

@@ -10,6 +10,8 @@ from config.config import *
 
 _ENGINE = None
 _MAKER = None
+
+
 def clean_up():
     global _MAKER, _ENGINE
     if _MAKER:
@@ -18,6 +20,7 @@ def clean_up():
     if _ENGINE:
         _ENGINE.dispose()
         _ENGINE = None
+
 
 def get_session():
     global _MAKER
@@ -30,15 +33,15 @@ def get_session():
     session = maker()
     return session
 
+
 def get_maker(engine):
-    return sqlalchemy.orm.sessionmaker(bind = engine)
+    return sqlalchemy.orm.sessionmaker(bind=engine)
+
 
 def get_engine():
     global _ENGINE
     engine = _ENGINE
     if engine is None:
-       engine = create_engine(DATA_BASE_URI, echo = True)
+        engine = create_engine(DATA_BASE_URI, echo=True)
     _ENGINE = engine
     return engine
-
-

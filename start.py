@@ -25,6 +25,7 @@ class Application(tornado.web.Application):
         )
         tornado.web.Application.__init__(self, handlers, **settings)
 
+
 if __name__ == "__main__":
     application = Application()
     application.listen(8888)
