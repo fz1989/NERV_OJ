@@ -3,14 +3,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">标题栏</h3>
+                <h3 id="myModalLabel">Sign In</h3>
             </div>
             <div class="modal-body">
-                <p>显示信息</p>
-
+                <form class="form-horizontal" name="login.form">
+                    <div class="control-group">
+                        <label class="control-label" for="username">username</label>
+                        <div class="controls">
+                            <input type="text" placeholder="input username" class="form-control input-xlarge">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="password">password</label>
+                        <div class="controls">
+                            <input type="password" placeholder="input password" class="form-control input-xlarge">
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button> <button class="btn btn-primary">保存设置</button>
+                <button class="btn btn-primary">Sign In</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancle</button> 
             </div>
          </div>
     </div>
