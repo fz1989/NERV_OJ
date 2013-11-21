@@ -1,6 +1,7 @@
 from models import User
 from api import DBAPI
 import sys
+from api import *
 sys.path.insert(0, '../')
 
 DB = DBAPI()
@@ -21,6 +22,4 @@ def init():
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "init":
         init()
-    print User.get_all()
-    for user in User.get_all():
-        print user
+    print "111", regist_user(username="fz198ss11", email="fz19@1.com", password="te")

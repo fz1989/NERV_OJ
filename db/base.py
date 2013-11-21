@@ -34,8 +34,10 @@ class ModelBase(object):
         try:
             session.flush()
             session.commit()
+            return True
         except:
             session.rollback()
+            return False
 
     def __setitem__(self, key, value):
         setattr(self, key, value)

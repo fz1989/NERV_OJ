@@ -21,7 +21,7 @@ class User(Base, OJBase):
     id = Column(Integer, primary_key=True)
     username = Column(String(20), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
-    email = Column(String(100), unique=True, nullable=False)
+    email = Column(String(100), nullable=False)
     school = Column(String(100))
     reg_time = Column(DateTime)
     last_sign_in = Column(DateTime)

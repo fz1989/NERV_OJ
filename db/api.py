@@ -6,6 +6,7 @@ from models import *
 from sqlalchemy import *
 from config.config import *
 import sys
+import hashlib
 
 
 class DBAPI:
@@ -29,37 +30,49 @@ class DBAPI:
         engine.execute(drop_sql)
         engine.dispose()
 
-    def regist_user(self, username, userpassword, email):
+    def regist_user(self, username, password, email):
         user = User(username=username,
-                    userpassword=userpassword,
+                    password=password,
                     email=email,
                     )
-        try:
-            user.save()
-        except:
-            pass
+        if User.name_exist(username):
+            return u"用户名已经存在！"
+        user.save()
+        return u"注册成功"
+
+    def check_login(self, username, password):
+        return User.get_by_name(name=username).password == password
+
+    def soft_del_user(self, username):
+        User.get_by_name(name=username).soft_delete()
+
+    def update_user(self, user_info):
+        User.get_by_name(name=username).update(user_info)
+
+    def get_user(self, username):
+        return User.get_by_name(name=username)
 
 DI = DBAPI()
 
 
-def regist_user(username, userpassword, email):
-    DI.regist_user(username, userpassword, email)
+def regist_user(username, password, email):
+    return DI.regist_user(username, password, email)
 
 
-def add_user(username, userpassword, user_group):
-    pass
+def check_login(username, password):
+    return DI.check_login(username, password)
 
 
 def del_user(username):
-    pass
+    return DI.soft_del_user(username)
 
 
-def update_user(username, user_info):
-    pass
+def update_user(user_info):
+    return DI.update_user(user_info)
 
 
-def find_user(username):
-    pass
+def get_user(username):
+    return DI.get_user(username)
 
 
 def add_problem(problem_info):
