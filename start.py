@@ -6,6 +6,7 @@ import tornado.ioloop
 import tornado.web
 import os
 import tornado.httpserver
+from controllers import user_controller
 
 
 class HomeHandler(tornado.web.RequestHandler):
@@ -17,6 +18,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", HomeHandler),
+            (r"/users", user_controller.UsersHandler),
         ]
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
