@@ -21,16 +21,7 @@ class ModelBase(object):
         """Save this object."""
         if not session:
             session = Session.get_session()
-        # NOTE(boris-42): This part of code should be look like:
-        #                       sesssion.add(self)
-        #                       session.flush()
-        #                 But there is a bug in sqlalchemy and eventlet that
-        #                 raises NoneType exception if there is no running
-        #                 transaction and rollback is called. As long as
-        #                 sqlalchemy has this bug we have to create transaction
-        #                 explicity.
-        #with session.begin(subtransactions=True):
-        session.add(self)
+            session.add(self)
         try:
             session.flush()
             session.commit()
@@ -79,10 +70,10 @@ class ModelBase(object):
         return local.iteritems()
 
     @classmethod
-    def get_by_id(cls, id, session=None, columns=None, lock_mode=None):
+    def get_by(cls, key, value, session=None, columns=None, lock_mode=None):
         if not session:
             session = Session.get_session()
-        if hasattr(cls, 'id'):
+        if hasattr(cls, key):
             scalar = False
             if columns:
                 if isinstance(columns, (tuple, list)):
@@ -94,39 +85,23 @@ class ModelBase(object):
                 query = session.query(cls)
             if lock_mode:
                 query = query.with_lockmode(lock_mode)
-            query = query.filter(cls.id == id)
+            query = query.filter(getattr(cls, key) == value)
             if scalar:
                 return query.scalar()
             return query.first()
         return None
 
     @classmethod
-    def get_by_name(cls, name, session=None, columns=None, lock_mode=None):
-        if not session:
-            session = Session.get_session()
-        if hasattr(cls, 'name'):
-            scalar = False
-            if columns:
-                if isinstance(columns, (tuple, list)):
-                    query = session.query(*columns)
-                else:
-                    scalar = True
-                    query = session.query(columns)
-            else:
-                query = session.query(cls)
-            if lock_mode:
-                query = query.with_lockmode(lock_mode)
-            query = query.filter(cls.name == name)
-            if scalar:
-                return query.scalar()
-            return query.first()
-        return None
+    def get_by_all(cls,
+                   key,
+                   value,
+                   session=None,
+                   columns=None,
+                   lock_mode=None):
 
-    @classmethod
-    def get_by_title(cls, title, session=None, columns=None, lock_mode=None):
         if not session:
             session = Session.get_session()
-        if hasattr(cls, 'title'):
+        if hasattr(cls, key):
             scalar = False
             if columns:
                 if isinstance(columns, (tuple, list)):
@@ -138,10 +113,10 @@ class ModelBase(object):
                 query = session.query(cls)
             if lock_mode:
                 query = query.with_lockmode(lock_mode)
-            query = query.filter(cls.title == title)
+            query = query.filter(getattr(cls, key) == value)
             if scalar:
                 return query.scalar()
-            return query.first()
+            return query.all()
         return None
 
     @classmethod
@@ -186,24 +161,13 @@ class ModelBase(object):
         return query.scalar()
 
     @classmethod
-    def id_exist(cls, id, session=None, lock_mode=None):
+    def exist(cls, key, value, session=None, lock_mode=None):
         if not session:
             session = Session.get_session()
 
-        if hasattr(cls, 'id'):
-            query = session.query(func.count('*')).select_from(cls).filter(cls.id == id)
-            if lock_mode:
-                query = query.with_lockmode(lock_mode)
-            return query.scalar() > 0
-        return False
-
-    @classmethod
-    def name_exist(cls, name, session=None, lock_mode=None):
-        if not session:
-            session = Session.get_session()
-
-        if hasattr(cls, 'name'):
-            query = session.query(func.count('*')).select_from(cls).filter(cls.name == name)
+        if hasattr(cls, key):
+            query = session.query(func.count('*')).select_from(cls).filter(getattr(cls, key) ==
+                    value)
             if lock_mode:
                 query = query.with_lockmode(lock_mode)
             return query.scalar() > 0
